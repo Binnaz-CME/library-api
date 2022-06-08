@@ -14,6 +14,7 @@ async function addBook(req, res) {
   const result = await model.add(req.body);
   res.send(result);
 }
+
 async function editBook(req, res) {
   const result = await model.editOne(req.body);
   console.log("result", result);
