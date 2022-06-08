@@ -1,23 +1,11 @@
 const express = require("express");
+const booksRouter = require('./routers/books.router')
 
-const db = require("./config/db");
 const app = express();
 
-app.get("/books", (req, res) => {
-  const sql = "SELECT * FROM books";
-  const params = [];
+app.use(express.json())
 
-  db.all(sql, params, (err, rows) => {
-    if (err) {
-      res.status(400).json({ Error: err.message });
-    }
-
-    res.json({
-      message: "success",
-      data: rows,
-    });
-  });
-});
+app.use("/books", booksRouter);
 
 app.get('/books/:id', (req, res) => {});
 
