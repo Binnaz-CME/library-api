@@ -23,6 +23,7 @@ const db = new sqlite3.Database("./db.sqlite", (err) => {
         "INSERT INTO books (author, title, genre) VALUES (?, ?, ?)";
 
       db.run(insert, ["Nora Roberts", "Nightwork", "Thrillers"]);
+      db.run(insert, ["Miguel de Cervantes", "Don Quixote ", "Parody"]);
     }
   });
 });

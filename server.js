@@ -1,13 +1,11 @@
 const express = require("express");
-const booksRouter = require('./routers/books.router')
+const booksRouter = require("./routers/books.router");
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
 app.use("/books", booksRouter);
-
-app.get('/books/:id', (req, res) => {});
 
 app.listen(4000, (err) => {
   if (err) {
