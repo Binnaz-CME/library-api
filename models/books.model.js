@@ -6,8 +6,7 @@ function getAll() {
   return new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => {
       if (err) {
-        res.status(400).json({ Error: err.message });
-        reject(err);
+        reject(`Error: ${err.message}`);
       }
       resolve(rows);
     });
@@ -20,8 +19,7 @@ function getOne(id) {
   return new Promise((resolve, reject) => {
     db.get(sql, id, (err, rows) => {
       if (err) {
-        res.status(400).json({ Error: err.message });
-        reject(err);
+        reject(`Error: ${err.message}`);
       }
       resolve(rows);
     });
@@ -29,13 +27,12 @@ function getOne(id) {
 }
 
 function add(book) {
-  const insert = "INSERT INTO books (author, title, genre) VALUES (?, ?, ?)";
+  const sql = "INSERT INTO books (author, title, genre) VALUES (?, ?, ?)";
 
   return new Promise((resolve, reject) => {
-    db.run(insert, [book.author, book.title, book.genre], (err) => {
+    db.run(sql, [book.author, book.title, book.genre], (err) => {
       if (err) {
-        res.status(400).json({ Error: err.message });
-        reject(err);
+        reject(`Error: ${err.message}`);
       }
       resolve(
         `Library successfully updated with the book; '${book.title}' by '${book.author}'.`
@@ -44,13 +41,13 @@ function add(book) {
   });
 }
 
-function editOne(book) {
-  const update =
+function replace(book) {
+  const sql =
     "UPDATE books SET author = $author, title = $title, genre = $genre WHERE id = $id";
 
   return new Promise((resolve, reject) => {
     db.run(
-      update,
+      sql,
       {
         $author: book.author,
         $title: book.title,
@@ -59,14 +56,48 @@ function editOne(book) {
       },
       (err) => {
         if (err) {
-          res.status(400).json({ Error: err.message });
-          reject(err);
+          reject(`Error: ${err.message}`);
         }
         resolve(
-          `Book successfully edited to title: '${book.title}', author: '${book.author}', genre: '${book.genre}'`
+          `Book was successfully edited to title: '${book.title}', author: '${book.author}', genre: '${book.genre}'`
         );
       }
     );
+  });
+}
+
+function update(newBook) {
+  console.log("book from model", newBook);
+  const sql =
+    "UPDATE books SET author = $author, title = $title, genre = $genre WHERE id = $id";
+  return new Promise((resolve, reject) => {
+    db.run(
+      sql,
+      {
+        $author: newBook.author,
+        $title: newBook.title,
+        $genre: newBook.genre,
+        $id: newBook.id,
+      },
+      (err) => {
+        if (err) {
+          reject(`Error: ${err.message}`);
+        }
+        resolve(`Book with id ${newBook.id} was updated.`);
+      }
+    );
+  });
+}
+
+function remove(id) {
+  const sql = "DELETE FROM books WHERE id = ?";
+  return new Promise((resolve, reject) => {
+    db.run(sql, id, (err) => {
+      if (err) {
+        reject(`Error: ${err.message}`);
+      }
+      resolve(`Book with id ${id} was successfully deleted.`);
+    });
   });
 }
 
@@ -74,5 +105,7 @@ module.exports = {
   getAll,
   getOne,
   add,
-  editOne,
+  replace,
+  update,
+  remove,
 };
