@@ -24,7 +24,7 @@ async function addBook(req, res) {
   const result = await model.add(req.body).catch((err) => {
     res.status(400).send(err);
   });
-  res.send(result);
+  res.status(201).send(result);
 }
 
 async function editBook(req, res) {
@@ -36,7 +36,7 @@ async function editBook(req, res) {
   const result = await model.replace(req.body).catch((err) => {
     res.status(400).send(err);
   });
-  res.send(result);
+  res.status(201).send(result);
 }
 
 async function updateBook(req, res) {
@@ -67,7 +67,7 @@ async function updateBook(req, res) {
     await model
       .update(newBook)
       .then((message) => {
-        res.send(message);
+        res.status(201).send(message);
       })
       .catch((err) => {
         res.status(400).send(err);
@@ -90,7 +90,7 @@ async function deleteBook(req, res) {
         res.send(err);
       });
   } else {
-    res.status(404).send("There is no such book in the library to delete.");
+    res.status(410).send("There is no such book in the library to delete.");
   }
 }
 
